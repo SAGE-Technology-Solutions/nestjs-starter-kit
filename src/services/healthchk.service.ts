@@ -21,7 +21,7 @@ export class HealthChkService {
       message: 'Healthchk Status OK',
     }
 
-    this.logger.log(data, 'Logging complete.')
+    this.logger.log(data, 'Application logging sample')
 
     return data
   }
