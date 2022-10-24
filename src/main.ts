@@ -4,6 +4,7 @@ import { createBullBoard } from '@bull-board/api'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
 import { ExpressAdapter } from '@bull-board/express'
 import { Queue } from 'bull'
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino'
 
 import { AppModule } from './app.module'
 import Config from './config/config'
@@ -14,9 +15,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const port = Config.port
 
+  // Loggers
+  app.useLogger(app.get(Logger))
+  app.useGlobalInterceptors(new LoggerErrorInterceptor())
+
+  // Global Validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
   app.useGlobalFilters(new EntityNotFoundExceptionFilter())
+
+  // Global route prefix
   app.setGlobalPrefix('api')
+
+  // Cors
   app.enableCors()
 
   // bull setup
