@@ -24,7 +24,10 @@ export class EntityNotFoundExceptionFilter implements ExceptionFilter {
         })
       else
         return response.status(exception['statusCode'] || 500).json({
-          message: exception['message'] || exceptionResp['response'] || 'Oops! Something went wrong. Please try again later.',
+          message:
+            exception['message'] ||
+            exceptionResp['response'] ||
+            'Oops! Something went wrong. Please try again later.',
         })
     }
   }

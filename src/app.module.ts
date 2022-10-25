@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
 import { Logger, LoggerModule } from 'nestjs-pino'
-import pinoHttp, { GenReqId,  } from 'pino-http'
+import pinoHttp, { GenReqId } from 'pino-http'
 import { randomUUID } from 'node:crypto'
 import pino from 'pino'
 
@@ -12,7 +12,7 @@ import { BullModule } from './modules/bull.module'
 import { ConsumerModule } from './modules/consumer.module'
 import Config from './config/config'
 
-let PinoOptions = {
+const PinoOptions = {
   customProps: (req, res) => ({
     context: 'HTTP',
   }),

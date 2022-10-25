@@ -59,10 +59,7 @@ export class HealthChkService {
     }
   }
 
-  throw () {
-    throw new HttpException(
-      'A bad request',
-      HttpStatus.BAD_REQUEST
-    )
+  throw() {
+    throw new HttpException('A bad request', HttpStatus.BAD_REQUEST)
   }
 }
