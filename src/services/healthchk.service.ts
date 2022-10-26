@@ -2,9 +2,10 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Queue } from 'bull'
+import { InjectQueue } from '@nestjs/bull'
+
 import { HealthChk } from '../entities/healthchk.entity'
 import { HealthChkQueue } from '../constants/queues'
-import { InjectQueue } from '@nestjs/bull'
 
 @Injectable()
 export class HealthChkService {
@@ -58,10 +59,7 @@ export class HealthChkService {
     }
   }
 
-  throw () {
-    throw new HttpException(
-      'A bad request',
-      HttpStatus.BAD_REQUEST
-    )
+  throw() {
+    throw new HttpException('A bad request', HttpStatus.BAD_REQUEST)
   }
 }

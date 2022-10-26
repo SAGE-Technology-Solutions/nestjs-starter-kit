@@ -8,7 +8,7 @@ import { DatasourceConfig } from '../src/db/datasource'
 import { HealthChkModule } from '../src/modules/healthchk.module'
 import { HealthChkQueue } from '../src/constants/queues'
 
-const QueueAddFn = jest.fn((event, payload) => {})
+const QueueAddFn = jest.fn((event, payload) => undefined)
 const MockedBullQueue = {
   add: QueueAddFn,
 }
