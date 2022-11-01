@@ -28,38 +28,24 @@ export class HealthChkService {
   }
 
   async storages() {
-    try {
-      await this._HealthChkRepository.count()
+    await this._HealthChkRepository.count()
 
-      return {
-        message: 'Storage OK',
-      }
-    } catch {
-      throw new HttpException(
-        `Could not retrieve data from storage system`,
-        HttpStatus.INTERNAL_SERVER_ERROR
-      )
+    return {
+      message: 'Storage OK',
     }
   }
 
   async queues() {
-    try {
-      await this._HealthChkQueue.add(HealthChkQueue.events.Status, {
-        message: 'Checking In',
-      })
+    await this._HealthChkQueue.add(HealthChkQueue.events.Status, {
+      message: 'Checking In',
+    })
 
-      return {
-        message: 'Queues OK',
-      }
-    } catch {
-      throw new HttpException(
-        `Could not dispatch payload to queueing system`,
-        HttpStatus.INTERNAL_SERVER_ERROR
-      )
+    return {
+      message: 'Queues OK',
     }
   }
 
   throw() {
-    throw new HttpException('A bad request', HttpStatus.BAD_REQUEST)
+    throw new HttpException('Intentional server error!', HttpStatus.NOT_FOUND)
   }
 }

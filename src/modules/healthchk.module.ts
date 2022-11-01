@@ -7,7 +7,10 @@ import { HealthChk } from '../entities/healthchk.entity'
 import { HealthChkService } from '../services/healthchk.service'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HealthChk]), HealthChkBullQueue],
+  imports: [
+    TypeOrmModule.forFeature([HealthChk]),
+    HealthChkBullQueue,
+  ],
   controllers: [HealthChkController],
   providers: [HealthChkService],
 })

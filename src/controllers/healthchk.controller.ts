@@ -10,24 +10,21 @@ export class HealthChkController {
     return this.healthChkService.status()
   }
 
-  @Get('/status/storage')
-  async storages() {
+  @Get('/status/full')
+  async statusFull() {
     return {
-      data: await this.healthChkService.storages(),
-    }
-  }
-
-  @Get('/status/queue')
-  async queues() {
-    return {
-      data: await this.healthChkService.queues(),
+      data: {
+        status: this.healthChkService.status(),
+        storages: await this.healthChkService.storages(),
+        queues: await this.healthChkService.queues(),
+      },
     }
   }
 
   @Get('/status/throw')
-  async throw() {
+  throw() {
     return {
-      data: await this.healthChkService.throw(),
+      data: this.healthChkService.throw(),
     }
   }
 }
