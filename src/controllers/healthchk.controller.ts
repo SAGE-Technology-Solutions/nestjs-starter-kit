@@ -1,12 +1,17 @@
 import { Controller, Get } from '@nestjs/common'
 import { HealthChkService } from '../services/healthchk.service'
+import { BaseController } from './base.controller'
 
 @Controller('/healthchk')
-export class HealthChkController {
-  constructor(private readonly healthChkService: HealthChkService) {}
+export class HealthChkController extends BaseController {
+  constructor(private readonly healthChkService: HealthChkService) {
+    super()
+  }
 
   @Get('/status')
   status() {
+    this.log('Processing status request')
+
     return this.healthChkService.status()
   }
 

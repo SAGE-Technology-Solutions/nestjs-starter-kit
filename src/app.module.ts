@@ -4,6 +4,7 @@ import { LoggerModule } from 'nestjs-pino'
 import { GenReqId } from 'pino-http'
 import { randomUUID } from 'node:crypto'
 import pino from 'pino'
+import * as pinoColada from 'pino-colada'
 
 import { DatasourceConfig } from './db/datasource'
 import { HealthChkModule } from './modules/healthchk.module'
@@ -13,19 +14,17 @@ import { ConsumerModule } from './modules/consumer.module'
 import Config from './config/config'
 
 const LoggerOptions = {
-  redact: ['req.headers.authorization', 'req.headers.cookie']
+  redact: ['req.headers.authorization', 'req.headers.cookie'],
 }
 if (!Config.isProd)
   LoggerOptions['prettyPrint'] = {
     colorize: true,
     singleLine: true,
     levelFirst: false,
+    messageFormat: pinoColada(),
   }
 
 const PinoHTTPOptions = {
-  customProps: (req, res) => ({
-    context: 'HTTP',
-  }),
   genReqId: function (req: any, res?: any) {
     if (req.id) return req.id
     let id = req.get('X-Request-Id')
