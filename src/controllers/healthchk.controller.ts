@@ -1,33 +1,35 @@
 import { Controller, Get } from '@nestjs/common'
 import { HealthChkService } from '../services/healthchk.service'
+import { BaseController } from './base.controller'
 
 @Controller('/healthchk')
-export class HealthChkController {
-  constructor(private readonly healthChkService: HealthChkService) {}
+export class HealthChkController extends BaseController {
+  constructor(private readonly healthChkService: HealthChkService) {
+    super()
+  }
 
   @Get('/status')
   status() {
+    this.log('Processing status request')
+
     return this.healthChkService.status()
   }
 
-  @Get('/status/storage')
-  async storages() {
+  @Get('/status/full')
+  async statusFull() {
     return {
-      data: await this.healthChkService.storages(),
-    }
-  }
-
-  @Get('/status/queue')
-  async queues() {
-    return {
-      data: await this.healthChkService.queues(),
+      data: {
+        status: this.healthChkService.status(),
+        storages: await this.healthChkService.storages(),
+        queues: await this.healthChkService.queues(),
+      },
     }
   }
 
   @Get('/status/throw')
-  async throw() {
+  throw() {
     return {
-      data: await this.healthChkService.throw(),
+      data: this.healthChkService.throw(),
     }
   }
 }

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'
-import { Logger, LoggerModule } from 'nestjs-pino'
-import pinoHttp, { GenReqId } from 'pino-http'
+import { LoggerModule } from 'nestjs-pino'
+import { GenReqId } from 'pino-http'
 import { randomUUID } from 'node:crypto'
 import pino from 'pino'
+import * as pinoColada from 'pino-colada'
 
 import { DatasourceConfig } from './db/datasource'
 import { HealthChkModule } from './modules/healthchk.module'
@@ -12,10 +13,18 @@ import { BullModule } from './modules/bull.module'
 import { ConsumerModule } from './modules/consumer.module'
 import Config from './config/config'
 
-const PinoOptions = {
-  customProps: (req, res) => ({
-    context: 'HTTP',
-  }),
+const LoggerOptions = {
+  redact: ['req.headers.authorization', 'req.headers.cookie'],
+}
+if (!Config.isProd)
+  LoggerOptions['prettyPrint'] = {
+    colorize: true,
+    singleLine: true,
+    levelFirst: false,
+    messageFormat: pinoColada(),
+  }
+
+const PinoHTTPOptions = {
   genReqId: function (req: any, res?: any) {
     if (req.id) return req.id
     let id = req.get('X-Request-Id')
@@ -25,18 +34,8 @@ const PinoOptions = {
 
     return id
   } as GenReqId,
-  logger: pino({
-    redact: ['req.headers.authorization', 'req.headers.cookie'],
-  }),
+  logger: pino(LoggerOptions),
 }
-
-if (!Config.isProd)
-  PinoOptions['transport'] = {
-    target: 'pino-pretty',
-    options: {
-      singleLine: true,
-    },
-  }
 
 @Module({
   imports: [
@@ -44,7 +43,7 @@ if (!Config.isProd)
       useFactory: () => DatasourceConfig as TypeOrmModuleOptions,
     }),
     LoggerModule.forRoot({
-      pinoHttp: PinoOptions,
+      pinoHttp: PinoHTTPOptions,
     }),
     ...BullModule,
     ConsumerModule,
